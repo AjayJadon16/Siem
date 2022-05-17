@@ -63,6 +63,7 @@ import { CosineWave, Store24Hour } from 'mdi-material-ui'
 
 import api from '../../../../services/api'
 import authConfig from '../../../../configs/auth'
+import { LinearProgress } from '@mui/material'
 
 interface UserRoleType {
   [key: string]: ReactElement
@@ -138,32 +139,24 @@ const MenuItemLink = styled('a')(({ theme }) => ({
   color: theme.palette.text.primary
 }))
 
-const RowOptions = (row:UsersType) => {
-
+const RowOptions = (row: UsersType) => {
   const [editUserOpen, seteditUserOpen] = useState<boolean>(false)
 
-  
   const toggleeditUserDrawer = () => seteditUserOpen(!editUserOpen)
-
 
   // ** Hooks
   const dispatch = useDispatch()
-  
 
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
- 
 
   const rowOptionsOpen = Boolean(anchorEl)
-
-  
 
   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleRowOptionsClose = () => {
     setAnchorEl(null)
-    
   }
 
   const handleDelete = () => {
@@ -200,7 +193,7 @@ const RowOptions = (row:UsersType) => {
             </MenuItemLink>
           </Link>
         </MenuItem>
-        <MenuItem onClick = {toggleeditUserDrawer} >
+        <MenuItem onClick={toggleeditUserDrawer}>
           <PencilOutline fontSize='small' sx={{ mr: 2 }} />
           Edit
         </MenuItem>
@@ -209,7 +202,7 @@ const RowOptions = (row:UsersType) => {
           Delete
         </MenuItem>
       </Menu>
-      <EditUserDrawer open={editUserOpen} toggle={toggleeditUserDrawer} data= {row.row}/>
+      <EditUserDrawer open={editUserOpen} toggle={toggleeditUserDrawer} data={row.row} />
     </>
   )
 }
@@ -290,45 +283,14 @@ const defaultColumns = [
       )
     }
   },
-  ,
-  // {
-  //   flex: 0.2,
-  //   minWidth: 150,
-  //   headerName: 'Plan',
-  //   field: 'currentPlan',
-  //   renderCell: ({ row }: CellType) => {
-  //     return (
-  //       <Typography noWrap sx={{ textTransform: 'capitalize' }}>
-  //         {row.currentPlan}
-  //       </Typography>
-  //     )
-  //   }
-  // }
-  // ,
-  // {
-  //   flex: 0.2,
-  //   minWidth: 140,
-  //   field: 'status',
-  //   headerName: 'Status',
-  //   renderCell: ({ row }: CellType) => {
-  //     return (
-  //       <CustomChip
-  //         skin='light'
-  //         size='small'
-  //         label={row.status}
-  //         color={userStatusObj[row.status]}
-  //         sx={{ textTransform: 'capitalize' }}
-  //       />
-  //     )
-  //   }
-  // }
+  
   {
     flex: 0.15,
     minWidth: 120,
     sortable: false,
     field: 'actions',
     headerName: 'Actions',
-    renderCell: ({ row }: CellType) => <RowOptions row ={row}/>
+    renderCell: ({ row }: CellType) => <RowOptions row={row} />
   }
 ]
 
@@ -344,12 +306,11 @@ const UserList = () => {
   // ** Hooks
   const dispatch = useDispatch()
   const store = useSelector((state: RootState) => state.user)
-  
-
 
   useEffect(() => {
-    dispatch(fetchData({ role }))
-  }, [dispatch, role])
+    // console.log(pageSize)
+    dispatch(fetchData({ role, pageSize }))
+  }, [dispatch, role, pageSize])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
@@ -443,7 +404,9 @@ const UserList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          
+          {(store.data)?(
+
+         
           <DataGrid
             autoHeight
             rows={store.data}
@@ -453,7 +416,9 @@ const UserList = () => {
             columns={defaultColumns}
             rowsPerPageOptions={[10, 25, 50]}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+
           />
+          ):<LinearProgress></LinearProgress>}
         </Card>
       </Grid>
 

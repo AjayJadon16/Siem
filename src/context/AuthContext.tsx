@@ -12,6 +12,7 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import Router from 'next/router'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -144,8 +145,11 @@ const AuthProvider = ({ children }: Props) => {
     logout: handleLogout,
     register: handleRegister
   }
+  
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
 }
 
-export { AuthContext, AuthProvider }
+
+
+export { AuthContext, AuthProvider}
